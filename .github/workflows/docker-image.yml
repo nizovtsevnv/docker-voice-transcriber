@@ -1,5 +1,9 @@
 name: Docker Image CI
 
+permissions:
+  packages: write
+  contents: read
+  
 on:
   push:
     branches: [ "main" ]
@@ -29,8 +33,3 @@ jobs:
           tags: |
             ghcr.io/${{ github.repository }}:latest
             ghcr.io/${{ github.repository }}:${{ github.sha }}
-
-      - if: always()
-        run: |
-          echo "ID: ${{ steps.docker_build.outputs.imageid }}"
-          echo "Digest: ${{ steps.docker_build.outputs.digest }}"
