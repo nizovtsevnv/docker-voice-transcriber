@@ -13,6 +13,19 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag voice-transcriber:$(date +%s)
+      - uses: actions/checkout@v4
+      - uses: docker/setup-buildx-action@v3
+      - id: docker_build
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          file: Dockerfile
+          push: false
+          tags: |
+            ghcr.io/${{ github.repository }}:latest
+            ghcr.io/${{ github.repository }}:${{ github.sha }}
+
+      - if: always()
+        run: |
+          echo "ID: ${{ steps.docker_build.outputs.imageid }}"
+          echo "Digest: ${{ steps.docker_build.outputs.digest }}"
