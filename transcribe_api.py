@@ -3,7 +3,7 @@ import whisper
 import os
 
 app = Flask(__name__)
-model = whisper.load_model("base")
+model = whisper.load_model("tiny")
 AUDIO_INPUT_DIR = "/app/audio_input"
 
 @app.route('/transcribe', methods=['POST'])
@@ -19,7 +19,7 @@ def transcribe():
     audio_file.save(audio_path)
 
     try:
-        result = model.transcribe(audio_path)
+        result = model.transcribe(audio_path, fp16=False)
         os.remove(audio_path)
         return jsonify({'text': result["text"]})
     except Exception as e:
