@@ -4,6 +4,8 @@ import os
 import logging
 
 app = Flask(__name__)
+app.logger.setLevel(logging.DEBUG)
+
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
