@@ -34,7 +34,8 @@ def transcribe():
         text = result["text"].strip()
         os.remove(audio_path)
         transcription_duration = time.perf_counter() - start_time
-        logger.debug(f"'{audio_file.filename}' successfully transcribed by {transcription_duration:.1f}s: '{text}'")        return jsonify({'text': text})
+        logger.debug(f"'{audio_file.filename}' successfully transcribed by {transcription_duration:.1f}s: '{text}'")
+        return jsonify({'text': text})
     except Exception as e:
         logger.error(f'Error during transcription: {str(e)}')
         os.remove(audio_path)
