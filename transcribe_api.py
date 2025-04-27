@@ -1,7 +1,8 @@
 from flask import Flask, request, jsonify
-import whisper
 import os
 import logging
+import time
+import whisper
 
 app = Flask(__name__)
 app.logger.setLevel(logging.DEBUG)
@@ -9,13 +10,11 @@ app.logger.setLevel(logging.DEBUG)
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-model = whisper.load_model("tiny")
+model = whisper.load_model("basic")
 AUDIO_INPUT_DIR = "/app/audio_input"
 
 @app.route('/transcribe', methods=['POST'])
 def transcribe():
-    logger.debug('Received transcription request')
-    
     if 'audio' not in request.files:
         logger.error('No audio file provided in request')
         return jsonify({'error': 'No audio file provided'}), 400
@@ -30,11 +29,11 @@ def transcribe():
     audio_file.save(audio_path)
 
     try:
-        logger.info('Starting transcription process')
+        start_time = time.perf_counter()
         result = model.transcribe(audio_path, fp16=False)
-        logger.debug('Transcription completed successfully')
         os.remove(audio_path)
-        logger.info('Audio file removed after processing')
+        transcription_duration = time.perf_counter() - start_time
+        logger.debug(f"'{audio_file.filename}' successfully transcribed by {duration}s: '{result['text']}'")
         return jsonify({'text': result["text"]})
     except Exception as e:
         logger.error(f'Error during transcription: {str(e)}')
