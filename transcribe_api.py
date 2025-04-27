@@ -10,7 +10,7 @@ app.logger.setLevel(logging.DEBUG)
 logging.basicConfig(level=logging.DEBUG, format='%(asctime)s - %(levelname)s - %(message)s')
 logger = logging.getLogger(__name__)
 
-model = whisper.load_model("basic")
+model = whisper.load_model("base")
 AUDIO_INPUT_DIR = "/app/audio_input"
 
 @app.route('/transcribe', methods=['POST'])
